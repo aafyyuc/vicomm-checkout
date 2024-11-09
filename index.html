@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example|Payment Checkout Js</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="https://pagos.yucatan.gob.mx/favicon.ico">
+        <script src="https://cdn.gpvicomm.com/ccapi/sdk/payment_checkout_stable.min.js"></script>
+    </head>
+    <body>
+        <input type="hidden" id="total" name="total" value="128.00" />
+        <button class="js-payment-checkout">Pay with Card[Vicomm]</button>
+        <br/>
+        <div id="response"></div>
+        <script>
+            let paymentCheckout = new PaymentCheckout.modal({
+                client_app_code: 'PMTZ-VICOMM-CLIENT'
+                , client_app_key:'ksdKa6z2ASkVqL4IavCReynaBEo8HG'
+                , locale: 'es'
+                , env_mode: 'stg'
+                , onOpen: function () { console.log('modal open');}
+                , onClose: function () { console.log('modal closed'); }
+                , onResponse: function (response) {
+                    console.log('modal response');
+                    document.getElementById('response').innerHTML = JSON.stringify(response);
+                }
+            });
+
+            let btnOpenCheckout = document.querySelector('.js-payment-checkout');
+            btnOpenCheckout.addEventListener('click', function () {
+                let _dtotal = parseFloat(document.getElementById('total').value);
+                console.log(_dtotal);
+                paymentCheckout.open({
+                    user_id: '20241108'
+                    , user_email: 'david.pechc@yucatan.gob.mx'
+                    , user_phone: '9992121112'
+                    , order_description: 'Recaudacion Yucatan'
+                    , order_amount: _dtotal
+                    , order_vat: 0
+                    , order_reference: '20241108001'
+                    , order_installments_type: -1
+                });
+            });
+            window.addEventListener('popstate', function () { paymentCheckout.close(); });
+        </script>
+    </body>
+</html>
